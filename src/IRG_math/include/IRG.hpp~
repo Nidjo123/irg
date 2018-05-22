@@ -1,0 +1,13 @@
+#ifndef IRG_HPP
+#define IRG_HPP
+
+#include <IMatrix.hpp>
+#include <IVector.hpp>
+
+class IRG {
+  static IMatrixPtr translate3D(double dx, double dy, double dz);
+  static IMatrixPtr scale3D(double sx, double sy, double sz);
+  static IMatrixPtr lookAtMatrix(IVectorPtr eye, IVectorPtr center, IVectorPtr viewUp);
+};
+
+#endif

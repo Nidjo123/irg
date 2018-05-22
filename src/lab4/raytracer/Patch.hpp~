@@ -1,0 +1,12 @@
+#ifndef PATCH_HPP
+#define PATCH_HPP
+
+#include "SceneObject.hpp"
+
+class Patch : public SceneObject {
+public:
+  IVec
+
+};
+
+#endif

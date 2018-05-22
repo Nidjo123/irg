@@ -1,0 +1,12 @@
+#ifndef SPHERE_HPP
+#define SPHERE_HPP
+
+#include "SceneObject.hpp"
+
+class Sphere : public SceneObject {
+public:
+  IVectorPtr center;
+  double radius;
+};
+
+#endif

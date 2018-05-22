@@ -1,0 +1,5 @@
+#include "RTScene.hpp"
+
+RTScene RTScene::readScene(std::string file) {
+
+}

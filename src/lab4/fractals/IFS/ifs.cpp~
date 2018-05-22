@@ -1,0 +1,149 @@
+#include <iostream>
+#include <complex>
+#include <stack>
+#include <GL/glut.h>
+#include <GL/freeglut.h>
+
+int WIDTH = 320*1.5;
+int HEIGHT = 200*1.5;
+
+void reshape(int width, int height);
+void display();
+void renderScene();
+//void keyPressed(unsigned char key, int x, int y);
+//void mouseFunc(int button, int state, int x, int y);
+
+int main(int argc, char *argv[]) {
+  glutInit(&argc, argv);
+  glutInitDisplayMode(GLUT_DOUBLE);
+  glutInitWindowSize(WIDTH, HEIGHT);
+  glutInitWindowPosition(0, 0);
+  glutCreateWindow("Mandelbrot");
+  glutDisplayFunc(display);
+  glutReshapeFunc(reshape);
+  glutKeyboardFunc(keyPressed);
+  glutMouseFunc(mouseFunc);
+
+  glutMainLoop();
+  
+  return 0;
+}
+
+void display() {
+  glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+  glClear(GL_COLOR_BUFFER_BIT);
+  glLoadIdentity();
+  
+  renderScene();
+
+  glutSwapBuffers();
+}
+
+void reshape(int width, int height) {
+  WIDTH = width;
+  HEIGHT = height;
+  
+  glDisable(GL_DEPTH_TEST);
+  glViewport(0, 0, (GLsizei)width, (GLsizei)height);
+  glMatrixMode(GL_PROJECTION);
+  glLoadIdentity();
+
+  glOrtho(0, width-1, 0, height-1, -1, 1);
+  
+  glMatrixMode(GL_MODELVIEW);
+}
+
+const double radius2 = 4.0;
+double umin = -2;
+double umax = 1;
+double vmin = -1.2;
+double vmax = 1.2;
+int maxLimit = 128;
+int divFunction = 1;
+int colFunction = 1;
+std::stack<std::complex<double>> stack;
+
+std::complex<double> toComplex(int x, int y) {
+  const double u = x/(double)(WIDTH-1)*(umax-umin) + umin;
+  const double v = y/(double)(HEIGHT-1)*(vmax-vmin) + vmin;
+
+  return std::complex<double>(u, v);
+}
+
+int divergenceTest(std::complex<double> &c, int limit) {
+  std::complex<double> z(0, 0);
+
+  for (int i = 1; i <= limit; i++) {
+    z = z*z + c;
+
+    if (std::norm(z) > radius2) return i;
+  }
+
+  return -1;
+}
+
+int divergenceTest2(std::complex<double> &c, int limit) {
+  std::complex<double> z(0, 0);
+
+  for (int i = 1; i <= limit; i++) {
+    z = z*z*z + c;
+
+    if (std::norm(z) > radius2) return i;
+  }
+
+  return -1;  
+}
+
+void colorScheme1(int n) {
+  if (n == -1) {
+    glColor3f(0.f, 0.f, 0.f);
+  } else {
+    glColor3f(1.f, 1.f, 1.f);
+  }
+}
+
+void colorScheme2(int n) {
+  if (n == -1) {
+    glColor3f(0.f, 0.f, 0.f);
+  } else if (maxLimit < 16) {
+    int r = (int)((n-1)/(double)(maxLimit-1) * 255 + 0.5);
+    int g = 255-r;
+    int b = ((n-1)%(maxLimit/2)) * 255/(maxLimit/2);
+    glColor3f((GLfloat)(r/255.f), (GLfloat)(g/255.f), (GLfloat)(b/255.f));
+  } else {
+    int lim = maxLimit < 32 ? maxLimit: 32;
+    int r = (n-1) * 255 / lim;
+    int g = ((n-1) % (lim / 4)) * 255 / (lim / 4);
+    int b = ((n-1) % (lim / 8)) * 255 / (lim / 8);
+    glColor3f((GLfloat)(r/255.f), (GLfloat)(g/255.f), (GLfloat)(b/255.f));
+  }
+}
+
+void renderScene() {
+  glPointSize(1);
+  glBegin(GL_POINTS);
+
+  for (int y = 0; y < HEIGHT; y++) {
+    for (int x = 0; x < WIDTH; x++) {
+      std::complex<double> c = toComplex(x, y);
+
+      int n;
+
+      if (divFunction == 1) {
+	n = divergenceTest(c, maxLimit);
+      } else {
+	n = divergenceTest2(c, maxLimit);
+      }
+
+      if (colFunction == 1) {
+	colorScheme1(n);
+      } else {
+	colorScheme2(n);
+      }
+      
+      glVertex2f((GLfloat)x, (GLfloat)(HEIGHT-y-1));
+    }
+  }
+  
+  glEnd();
+}

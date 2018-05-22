@@ -1,0 +1,8 @@
+#ifndef RTSCENE_HPP
+#define RTSCENE_HPP
+
+class RTScene {
+
+};
+
+#endif

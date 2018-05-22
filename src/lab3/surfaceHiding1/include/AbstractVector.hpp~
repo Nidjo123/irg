@@ -1,0 +1,38 @@
+#ifndef ABSTRACT_VECTOR_HPP
+#define ABSTRACT_VECTOR_HPP
+
+#include "IVector.hpp"
+
+class AbstractVector : public IVector {
+public:
+  virtual double get(int) const override = 0;
+  virtual IVectorPtr set(int, double) override = 0;
+  virtual int getDimension() const override = 0;
+  virtual IVectorPtr newInstance(int) const override = 0;
+  virtual IVectorPtr copy() const override = 0;
+  virtual IVectorPtr copyPart(int) const override;
+  virtual IVectorPtr add(IVectorPtr) override;
+  virtual IVectorPtr nAdd(IVectorPtr) const override;
+  virtual IVectorPtr sub(IVectorPtr) override;
+  virtual IVectorPtr nSub(IVectorPtr) const override;
+  virtual IVectorPtr scalarMultiply(double) override;
+  virtual IVectorPtr nScalarMultiply(double) const override;
+  virtual double norm() const override;
+  virtual IVectorPtr normalize() override;
+  virtual IVectorPtr nNormalize() const override;
+  virtual double cosine(IVectorPtr) const override;
+  virtual double scalarProduct(IVectorPtr) const override;
+  virtual IVectorPtr nVectorProduct(IVectorPtr) const override;
+  virtual IVectorPtr nFromHomogeneous() const override;
+  virtual IMatrixPtr toRowMatrix(bool) override;
+  virtual IMatrixPtr toColumnMatrix(bool) override;
+  virtual std::vector<double> toVec() const override;
+  virtual std::string toString() const override;
+
+protected:
+  static void checkIndex(const IVector*, int);
+  static void checkDimensions(const IVector*, const IVector*);
+};
+
+#endif
+

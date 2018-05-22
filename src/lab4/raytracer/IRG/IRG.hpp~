@@ -1,0 +1,12 @@
+#ifndef IRG_HPP
+#define IRG_HPP
+
+#include <AbstractMatrix.hpp>
+
+class IRG {
+  static IMatrixPtr translate3D(double dx, double dy, double dz);
+  static IMatrixPtr scale3D(double sx, double sy, double sz);
+  static IMatrixPtr lookAtMatrix(
+};
+
+#endif

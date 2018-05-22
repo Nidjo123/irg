@@ -1,0 +1,9 @@
+#include "Sphere.hpp"
+
+
+void Sphere::updateIntersection(Intersection &inters, IVectorPtr start, IVectorPtr d) {
+
+}
+IVectorPtr Sphere::getNormalInPoint(IVectorPtr point) {
+
+}
